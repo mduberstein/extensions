@@ -21,30 +21,41 @@ const settings = {
 
 function redirectURL(requestDetails) {
   let url = requestDetails.url;
-  // QA cashier
 
-  // if (url === 'https://cdn-qa.pyrsoftware.ca/wc/2.20.187/cashier.js') {
-  //   return {
-  //     redirectUrl: 'https://cdn-qa.pyrsoftware.ca/wc/2.20.188/cashier.js'
-  //   };
-  // }
   if (settings.wc.qa ) {
-    let version = '2.20.1303'
-    if (settings.wc.qa.paycallback2) {   
+    let version = '2.20.1334'
+
+    if (settings.wc.qa.paycallback2) { 
+                // https://cdn-qa.pyrsoftware.ca/wc/2.20.1334/paycallback2.js  
       if (url === `https://cdn-qa.pyrsoftware.ca/wc/${version}/paycallback2.js`) {
+        let u = 'http://localhost:3000/paycallback2/scripts/paycallback2.js'
+        console.log(`Substituting paycallback2.js from ${u}`);
         return {
-          redirectUrl: 'http://localhost:3000/cashier/scripts/paycallback2.js'
+          redirectUrl: u
         };
       }
 
       if (url === `https://rc.cashier-qa.pyr/paycallback2/i18n/locales/en.js`) {
+              // http://localhost:3000/paycallback2/i18n/locales/en.js
+        let u = 'http://localhost:3000/paycallback2/i18n/locales/en.js'
+        console.log(`Substituting paycallback2 en.js from ${u}`);
         return {
-          redirectUrl: 'http://localhost:3000/cashier/i18n/locales/en.js'
+          redirectUrl: u
         };
       }
 
+                  // https://cdn-qa.pyrsoftware.ca/wc/2.20.1334/styles/2015/paycallback2.css
+        if (url === `https://cdn-qa.pyrsoftware.ca/wc/${version}/styles/2015/paycallback2.css`){
+              // http://localhost:3000/paycallback2/styles/2015/paycallback2.css
+        let u = 'http://localhost:3000/paycallback2/styles/2015/paycallback2.css';
+        console.log(`Substituting paycallback2.css from ${u}`);
+        return {
+          redirectUrl: u
+        }
+      }
+
       if (url.match(/https\:\/\/rc\.cashier\-qa\.p+yr\/paycallback2\/templates\//)) {
-        let u = url.replace(/https\:\/\/rc\.cashier\-qa\.pyr\/paycallback2\/templates\//, 'http://localhost:3000/cashier/templates/');
+        let u = url.replace(/https\:\/\/rc\.cashier\-qa\.pyr\/paycallback2\/templates\//, 'http://localhost:3000/paycallback2/templates/');
         // let u = url.replace(/https\:\/\/rc\.cashier\-qa\.pyr\/cashier\/templates\//, 'https://localhost/wc2front/app/templates/');
         return {
           redirectUrl: u
@@ -53,23 +64,33 @@ function redirectURL(requestDetails) {
     }
 
     if (settings.wc.qa.cashier) {
+                // https://cdn-qa.pyrsoftware.ca/wc/2.20.1334/cashier.js
       if (url === `https://cdn-qa.pyrsoftware.ca/wc/${version}/cashier.js`) {
+        let u = 'http://localhost:3000/cashier/scripts/cashier.js'
+        console.log(`Substituting cashier.js from ${u}`);
         return {
-          redirectUrl: 'http://localhost:3000/cashier/scripts/cashier.js'
+          redirectUrl: u
         };
       }
   
-      // if (url === `https://rc.cashier-qa.pyr/cashier/i18n/locales/en.js`) { 
+
+                // https://cdn-qa.pyrsoftware.ca/wc/2.20.1334/i18n/locales/en.js
       if (url === `https://cdn-qa.pyrsoftware.ca/wc/${version}/i18n/locales/en.js`) {
+        let u = 'http://localhost:3000/cashier/i18n/locales/en.js'
+        console.log(`Substituting cashier en.js from ${u}`);
         return {
-          redirectUrl: 'http://localhost:3000/cashier/i18n/locales/en.js'
+          redirectUrl: u
         };
       }
   
+                // https://cdn-qa.pyrsoftware.ca/wc/2.20.1334/styles/2015/cashier.css
       if (url === `https://cdn-qa.pyrsoftware.ca/wc/${version}/styles/2015/cashier.css`) {
+              // http://localhost:3000/cashier/styles/2015/cashier.css
+        let u = 'http://localhost:3000/cashier/styles/2015/cashier.css'
+        console.log(`Substituting cashier.css from ${u}`);
         return {
-          redirectUrl: 'http://localhost:3000/cashier/styles/2015/cashier.css'
-          // redirectUrl: 'https://localhost/wc2front/.tmp/styles/2015/cashier.css'
+          redirectUrl: u
+          // redirectUrl: 'https://localhost/wc2front/.tmp/styles/2015/cashier.css' // didn'use
         };
       }
   
@@ -89,6 +110,7 @@ function redirectURL(requestDetails) {
       // UNUSED ALT_1 END
       if (url.indexOf(imagesUrl) === 0) {
         let u = url.replace(imagesUrl, 'http://localhost:3000/cashier/images/');
+        console.log(`Substituting cashier images from ${u}`);
         return {
           redirectUrl: u
         }
