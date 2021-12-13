@@ -2,6 +2,8 @@ if (!window.browser && window.chrome) {
   window['browser'] = chrome;
 }
 
+console.log('PYR extension: before settings!');
+
 const settings = {
   ram: {
     betstars: false
@@ -9,7 +11,7 @@ const settings = {
 
   wc: {
     qa: true,
-    cashier:false,
+    cashier:true,
     deposit:false,
     paycallback2:true
   },
@@ -23,9 +25,11 @@ function redirectURL(requestDetails) {
   let url = requestDetails.url;
 
   if (settings.wc.qa ) {
-    let version = '2.20.1334'
+    let version = '2.20.1336'
+    console.log(`PYR Extension, in redirectURL: version ${version}.`);
 
-    if (settings.wc.qa.paycallback2) { 
+    if (settings.wc.paycallback2) { 
+      console.log(`PYR Extension, in redirectURL, in paycallback2 if statement: version ${version}.`);
                 // https://cdn-qa.pyrsoftware.ca/wc/2.20.1334/paycallback2.js  
       if (url === `https://cdn-qa.pyrsoftware.ca/wc/${version}/paycallback2.js`) {
         let u = 'http://localhost:3000/paycallback2/scripts/paycallback2.js'
@@ -34,7 +38,7 @@ function redirectURL(requestDetails) {
           redirectUrl: u
         };
       }
-
+                  // "https://rc.cashier-qa.pyr/paycallback2/i18n/locales/en.js"
       if (url === `https://rc.cashier-qa.pyr/paycallback2/i18n/locales/en.js`) {
               // http://localhost:3000/paycallback2/i18n/locales/en.js
         let u = 'http://localhost:3000/paycallback2/i18n/locales/en.js'
@@ -56,6 +60,7 @@ function redirectURL(requestDetails) {
 
       if (url.match(/https\:\/\/rc\.cashier\-qa\.p+yr\/paycallback2\/templates\//)) {
         let u = url.replace(/https\:\/\/rc\.cashier\-qa\.pyr\/paycallback2\/templates\//, 'http://localhost:3000/paycallback2/templates/');
+        console.log(`Substituting paycallback2 templates from ${u}`);
         // let u = url.replace(/https\:\/\/rc\.cashier\-qa\.pyr\/cashier\/templates\//, 'https://localhost/wc2front/app/templates/');
         return {
           redirectUrl: u
@@ -63,7 +68,8 @@ function redirectURL(requestDetails) {
       }
     }
 
-    if (settings.wc.qa.cashier) {
+    if (settings.wc.cashier) {
+      console.log(`PYR Extension, in redirectURL, in cashier if statement: version ${version}.`);
                 // https://cdn-qa.pyrsoftware.ca/wc/2.20.1334/cashier.js
       if (url === `https://cdn-qa.pyrsoftware.ca/wc/${version}/cashier.js`) {
         let u = 'http://localhost:3000/cashier/scripts/cashier.js'
@@ -74,8 +80,12 @@ function redirectURL(requestDetails) {
       }
   
 
-                // https://cdn-qa.pyrsoftware.ca/wc/2.20.1334/i18n/locales/en.js
-      if (url === `https://cdn-qa.pyrsoftware.ca/wc/${version}/i18n/locales/en.js`) {
+      // ERROR: Apparently causes error:
+      // https://rc.cashier-qa.pyr
+      // cashier.js:3889 GET https://rc.cashier-qa.pyr/cashier/i18n/locales/en.js 404 (Not Found)
+
+      //           // https://cdn-qa.pyrsoftware.ca/wc/2.20.1334/i18n/locales/en.js
+      if (url === `https://rc.cashier-qa.pyr/cashier/i18n/locales/en.js`) {
         let u = 'http://localhost:3000/cashier/i18n/locales/en.js'
         console.log(`Substituting cashier en.js from ${u}`);
         return {
@@ -118,6 +128,7 @@ function redirectURL(requestDetails) {
   
       if (url.match(/https\:\/\/rc\.cashier\-qa\.pyr\/cashier\/templates\//)) {
         let u = url.replace(/https\:\/\/rc\.cashier\-qa\.pyr\/cashier\/templates\//, 'http://localhost:3000/cashier/templates/');
+        console.log(`Substituting cashier templates from ${u}`);
         // let u = url.replace(/https\:\/\/rc\.cashier\-qa\.pyr\/cashier\/templates\//, 'https://localhost/wc2front/app/templates/');
         return {
           redirectUrl: u
@@ -125,7 +136,7 @@ function redirectURL(requestDetails) {
       }
     }
 
-    if (settings.wc.qa.deposit) {
+    if (settings.wc.deposit) {
       if (url === `https://cdn-qa.pyrsoftware.ca/wc/${version}/deposit.js`) { //how to display?
         return {
           redirectUrl: 'http://localhost:3000/deposit/scripts/deposit.js'
